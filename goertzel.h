@@ -11,10 +11,12 @@ public:
         float &sine, float &cosine)
     {
         float N = block_size;
+        // k in the number of the bin
         int k = (int) (0.5f + ((N * target_frequency) / sampling_rate));
         float omega = (2.0f * M_PI * k) / N;
         sine = sin(omega);
         cosine = cos(omega);
+        std::cout << "k = " << k <<" omega = " << omega << "\n";
     }
 
     Goertzel(float sampling_rate,

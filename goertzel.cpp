@@ -3,6 +3,8 @@
 #include "sinegen.h"
 #include "goertzel.h"
 
+#define ALL_BINS        0
+
 int main(int argc, char *argv[])
 {
     const float SR = 750000.0f;
@@ -10,12 +12,14 @@ int main(int argc, char *argv[])
     const float F2 = 300000.0f;
     const size_t N = 30;
 
+#if (ALL_BINS > 0)
     Goertzel *bins[N];
 
     for (auto i = 0; i < N; i++)
     {
         bins[i] = new Goertzel{SR, SR * i / N, N};
     }
+#endif
 
     Sinegen gen{F1, SR};
     Sinegen gen2{F2, SR};
@@ -32,10 +36,12 @@ int main(int argc, char *argv[])
 
         s = (s + s2) / 2;
 //
+#if (ALL_BINS > 0)
         for (auto i = 0; i < N; i++)
         {
             bins[i]->process_sample(s);
         }
+#endif
 
         go.process_sample(s);
         go2.process_sample(s);
@@ -46,10 +52,12 @@ int main(int argc, char *argv[])
 
     printf("Goertzel: %f\n", go.get_magnitude_squared());
 //    printf("Goertzel: %f\n", go2.get_magnitude_squared());
+#if (ALL_BINS > 0)
     for (auto i = 0; i < N; i++)
     {
         printf("G[%u] = %f\n", i, bins[i]->get_magnitude_squared());
     }
+#endif
 
     outfile.close();
 }
